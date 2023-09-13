@@ -14,9 +14,19 @@ with open('/media/src/hg19/01.Methylation/00.Bed/NCBI.RefSeq.Selected.hg19.bed' 
             TxEnd = splitted[3].split(',')
             TxEnd.pop(-1)
             GeneSymbol = splitted[4]
-            for num in range(len(TxStart)):
-                if len(TxStart) - num != 1:
-                    note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(num)}' + '\t' + Strand + '\n')
-                    note.write(Chromosome + '\t' + str(int(TxEnd[num]) + 1) + '\t' + str(int(TxStart[num+1]) - 1) + '\t' + GeneSymbol + '\t' + 'Intron' + f'_{str(num)}' + '\t' + Strand + '\n')
-                elif len(TxStart) - num == 1:
-                    note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(num)}' + '\t' + Strand + '\n')
+            if Strand =='+':
+                for num in range(len(TxStart)):
+                    if len(TxStart) - num != 1:
+                        note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(num)}' + '\t' + Strand + '\n')
+                        note.write(Chromosome + '\t' + str(int(TxEnd[num]) + 1) + '\t' + str(int(TxStart[num+1]) - 1) + '\t' + GeneSymbol + '\t' + 'Intron' + f'_{str(num)}' + '\t' + Strand + '\n')
+                    elif len(TxStart) - num == 1:
+                        note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(num)}' + '\t' + Strand + '\n')
+
+            elif Strand =='-':
+                for num in range(len(TxStart)):
+                    number = list(range(len(TxStart)))[::-1][num]
+                    if len(TxStart) - number == 1:
+                        note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(number)}' + '\t' + Strand + '\n')
+                    elif len(TxStart) - number != 1:
+                        note.write(Chromosome + '\t' + str(int(TxEnd[num -1]) + 1) + '\t' + str(int(TxStart[num]) - 1) + '\t' + GeneSymbol + '\t' + 'Intron' + f'_{str(number)}' + '\t' + Strand + '\n')
+                        note.write(Chromosome + '\t' + TxStart[num] + '\t' + TxEnd[num] + '\t' + GeneSymbol + '\t' + 'Exon' + f'_{str(number)}' + '\t' + Strand + '\n')
